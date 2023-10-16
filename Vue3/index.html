@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script> <!-- Використовуємо Vue 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script> <!-- Vue 3 -->
     <title>Цитати</title>
     <style>
         .red {
@@ -49,8 +49,8 @@
         </div>
         <button @click="sortQuotes">Сортувати за прізвищем</button> 
         <hr/>
-        <div class="quote" v-for="qt in sortedQuotes" :key="qt.id"> <!-- Додано :key -->
-            <h3 :class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3> <!-- Змінено v-bind:class на :class -->
+        <div class="quote" v-for="qt in sortedQuotes" :key="qt.id"> 
+            <h3 :class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3> 
             <h5>{{ qt.source }}</h5>
         </div>
     </div>
@@ -68,27 +68,27 @@
                         source: "Christopher"
                     },
                     {
-                        id: 2, // Додано ідентифікатор для вказування ключа
+                        id: 2, 
                         quote: "This is just a Quote3 with a very long text that is longer than 40 characters",
                         source: "Martin"
                     },
                     {
-                        id: 3, // Додано ідентифікатор для вказування ключа
+                        id: 3, 
                         quote: "This is just a Quote3",
                         source: "Dennis"
                     },
                     {
-                        id: 4, // Додано ідентифікатор для вказування ключа
+                        id: 4, 
                         quote: "This is just a Quote4",
                         source: ""
                     },
                     {
-                        id: 5, // Додано ідентифікатор для вказування ключа
+                        id: 5, 
                         quote: "This is just a Quote5",
                         source: "Abram"
                     },
                     {
-                        id: 6, // Додано ідентифікатор для вказування ключа
+                        id: 6,
                         quote: "This is just a Quote6",
                         source: "Franklin"
                     }
