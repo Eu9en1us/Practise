@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>Список студентів</title>
+    <style>
+        .highlighted {
+            background-color: rgb(230, 169, 169);
+        }
+        h1 {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Список студентів</h1>
+        <input type="text" v-model="search" placeholder="Пошук за прізвищем">
+        <table>
+            <thead>
+                <tr>
+                    <th>ПІБ</th>
+                    <th>Група</th>
+                    <th>Рік народження</th>
+                    <th>Практика</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="student in filteredStudents" :key="student.id" :class="{ 'highlighted': student.highlighted }">
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.group }}</td>
+                    <td>{{ student.birthYear }}</td>
+                    <td>
+                        <input type="checkbox" v-model="student.passed">
+                    </td>
+                    <td>
+                        <a @click="removeStudent(student.id)" href="#">Видалити</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                students: [
+                    { id: 1, name: 'Іванов Іван Іванович', group: 'Група 1', birthYear: 1998, passed: true, highlighted: false },
+                    { id: 2, name: 'Петров Петро Петрович', group: 'Група 2', birthYear: 1999, passed: false, highlighted: false },
+                    { id: 3, name: 'Сидоров Олег Васильович', group: 'Група 1', birthYear: 2000, passed: true, highlighted: false },
+                    { id: 4, name: 'Коваленко Марія Володимирівна', group: 'Група 3', birthYear: 2002, passed: false, highlighted: false },
+                    { id: 5, name: 'Гриценко Оксана Ігорівна', group: 'Група 1', birthYear: 2000, passed: true, highlighted: false },
+                    { id: 6, name: 'Лисенко Ігор Володимирович', group: 'Група 2', birthYear: 2001, passed: false, highlighted: false },
+                    { id: 7, name: 'Шевченко Марина Сергіївна', group: 'Група 3', birthYear: 1999, passed: true, highlighted: false },
+                    { id: 8, name: 'Морозов Валентин Олегович', group: 'Група 2', birthYear: 2002, passed: false, highlighted: false },
+                    { id: 9, name: 'Кравченко Ольга Андріївна', group: 'Група 1', birthYear: 2000, passed: true, highlighted: false },
+                    { id: 10, name: 'Павленко Василь Миколайович', group: 'Група 3', birthYear: 2001, passed: false, highlighted: false },
+                    { id: 11, name: 'Самойленко Анна Олексіївна', group: 'Група 2', birthYear: 2000, passed: true, highlighted: false },
+                    { id: 12, name: 'Литвиненко Віктор Максимович', group: 'Група 1', birthYear: 1999, passed: true, highlighted: false },
+                    { id: 13, name: 'Корнієнко Олена Сергіївна', group: 'Група 3', birthYear: 2001, passed: false, highlighted: false },
+                    { id: 14, name: 'Кузьменко Дмитро Андрійович', group: 'Група 2', birthYear: 1998, passed: true, highlighted: false },
+                    { id: 15, name: 'Білоус Віра Олександрівна', group: 'Група 1', birthYear: 2002, passed: true, highlighted: false },
+                    { id: 16, name: 'Іваненко Марія Володимирівна', group: 'Група 3', birthYear: 2001, passed: false, highlighted: false }
+
+                ],
+                search: ''
+            },
+            computed: {
+                filteredStudents() {
+                    const searchTerm = this.search.toLowerCase();
+                    return this.students.map(student => {
+                        const highlighted = searchTerm && student.name.toLowerCase().includes(searchTerm);
+                        return { ...student, highlighted };
+                    });
+                }
+            },
+            methods: {
+                removeStudent(id) {
+                    const index = this.students.findIndex(student => student.id === id);
+                    if (index !== -1) {
+                        this.students.splice(index, 1);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
