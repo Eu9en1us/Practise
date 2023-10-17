@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>Цитати</title>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .black {
+            color: black;
+        }
+
+        .green {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+        }
+
+        .center {
+            width: 28%;
+            margin: 0 auto;
+        }
+
+        .center p {
+            font-size: 48px;
+        }
+
+        .center #source {
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center" id="app">
+        <input type="radio" id="withAuthor" name="authorFilter" value="withAuthor" v-model="authorFilter"> 
+        <label for="withAuthor">Є автор</label>
+        <input type="radio" id="withoutAuthor" name="authorFilter" value="withoutAuthor" v-model="authorFilter"> 
+        <label for="withoutAuthor">Автора немає</label>
+        
+        <div class="quote" v-for="qt in filteredQuotes">
+            <h3 v-bind:class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3>
+            <h5>{{ qt.source }}</h5>
+        </div>
+        <button @click="sortQuotes">Сортувати за прізвищем</button> 
+        <hr/>
+        <div class="quote" v-for="qt in sortedQuotes">
+            <h3 v-bind:class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3>
+            <h5>{{ qt.source }}</h5>
+        </div>
+        <button @click="closeSortedQuotes" v-if="sortedQuotes.length > 0">Закрити відсортований список</button>
+    </div>
+</body>
+<script type="text/javascript">
+    var quotesArray = [
+        {
+            "quote": "This is just a Quote1",
+            "source": "Christopher"
+        },
+        {
+            "quote": "This is just a Quote3 with a very long text that is longer than 40 characters",
+            "source": "Martin"
+        },
+        {
+            "quote": "This is just a Quote3",
+            "source": "Dennis"
+        },
+        {
+            "quote": "This is just a Quote4",
+            "source": ""
+        },
+        {
+            "quote": "This is just a Quote5 with a very long text that is longer than 40 characters",
+            "source": "Abram"
+        },
+        {
+            "quote": "This is just a Quote6",
+            "source": "Franklin"
+        }
+    ]
+
+    new Vue({
+        el: '#app',
+        data: {
+            quotes: quotesArray,
+            authorFilter: "withAuthor",
+            sortedQuotes: []  // Додана нова властивість для відсортованих цитат
+        },
+        computed: {
+            filteredQuotes: function() {
+                if (this.authorFilter === "withAuthor") {
+                    return this.quotes.filter(function(quote) {
+                        return quote.source !== "";
+                    });
+                } else if (this.authorFilter === "withoutAuthor") {
+                    return this.quotes.filter(function(quote) {
+                        return quote.source === "";
+                    });
+                } else {
+                    return this.quotes;
+                }
+            }
+        },
+        methods: {
+            sortQuotes: function() {
+                const quotesWithAuthor = this.quotes.filter(quote => quote.source !== "");
+                quotesWithAuthor.sort(function(a, b) {
+                    if (a.source < b.source) return -1;
+                    if (a.source > b.source) return 1;
+                    return 0;
+                });
+                this.sortedQuotes = quotesWithAuthor;
+            }
+        },
+        methods: {
+    sortQuotes: function() {
+        const quotesWithAuthor = this.quotes.filter(quote => quote.source !== "");
+        quotesWithAuthor.sort(function(a, b) {
+            if (a.source < b.source) return -1;
+            if (a.source > b.source) return 1;
+            return 0;
+        });
+        this.sortedQuotes = quotesWithAuthor;
+    },
+    closeSortedQuotes: function() {
+        this.sortedQuotes = []; // Очистити відсортований список
+    }
+}
+
+    })
+</script>
+
+</html>

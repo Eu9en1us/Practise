@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цитати</title>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="quote in quotes">
+                {{ quote.quote }}
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                quotes: [
+                    {
+                        "quote": "This is just a Quote1",
+                        "source": "Christopher"
+                    },
+                    {
+                        "quote": "This is just a Quote2",
+                        "source": "Martin"
+                    },
+                    {
+                        "quote": "This is just a Quote3",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote4",
+                        "source": ""
+                    }
+                ]
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цитати</title>
+</head>
+<body>
+    <div id="app">
+        <label>
+            <input type="checkbox" v-model="showQuotesWithAuthor"> Показати цитати з авторами
+        </label>
+        <ul>
+            <li v-for="quote in quotes" v-if="showQuotesWithAuthor || quote.source !== ''">
+                {{ quote.quote }}
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                showQuotesWithAuthor: true, // Використовується для перемикача
+                quotes: [
+                    {
+                        "quote": "This is just a Quote1",
+                        "source": "Christopher"
+                    },
+                    {
+                        "quote": "This is just a Quote2",
+                        "source": "Martin"
+                    },
+                    {
+                        "quote": "This is just a Quote3 with a very long text that is longer than 40 characters",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote3",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote4",
+                        "source": ""
+                    }
+                    ]
+                }
+            }
+        );
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цитати</title>
+</head>
+<body>
+    <div id="app">
+        <!-- Введення перемикача "Показати цитати з авторами" -->
+        <label>
+            <input type="checkbox" v-model="showQuotesWithAuthor"> Показати цитати з авторами
+        </label>
+        <!-- Відображення списку цитат у відповідних кольорах -->
+        <ul>
+            <!-- Використовуємо директиву v-for для ітерації через масив цитат -->
+            <li v-for="quote in quotes" v-if="showQuotesWithAuthor || quote.source !== ''" v-bind:style="{ color: quote.quote.length > 40 ? 'red' : 'black' }">
+                <!-- Виведення тексту цитати -->
+                {{ quote.quote }}
+                 <!-- Виведення автора меншим шрифтом -->
+                 <span v-if="quote.source" style="font-size: 12px;"><br>- {{ quote.source }}</span>
+
+            </li>
+        </ul>
+    </div>
+
+    <!-- Підключення бібліотеки Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        // Ініціалізація Vue.js додатку
+        var app = new Vue({
+            el: '#app',
+            data: {
+                // Змінна, яка використовується для перемикача "Показати цитати з авторами"
+                showQuotesWithAuthor: true,
+                // Масив цитат
+                quotes: [
+                    {
+                        "quote": "This is just a Quote1",
+                        "source": "Christopher"
+                    },
+                    {
+                        "quote": "This is just a Quote2",
+                        "source": "Martin"
+                    },
+                    {
+                        "quote": "This is just a Quote3 with a very long text that is longer than 40 characters",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote3",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote4",
+                        "source": ""
+                    }
+                ]
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цитати</title>
+</head>
+<body>
+    <div id="app">
+        <label>
+            <input type="checkbox" v-model="showQuotesWithAuthor"> Показати цитати з авторами
+        </label>
+        <button @click="sortQuotesByAuthor">Сортувати за авторами</button>
+        <ul>
+            <li v-for="quote in sortedQuotes" v-if="showQuotesWithAuthor || quote.source !== ''" v-bind:style="{ color: quote.quote.length > 40 ? 'red' : 'black' }">
+                {{ quote.quote }}
+                <span v-if="quote.source" style="font-size: 12px;"><br>- {{ quote.source }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                showQuotesWithAuthor: true,
+                quotes: [
+                    {
+                        "quote": "This is just a Quote1",
+                        "source": "Christopher"
+                    },
+                    {
+                        "quote": "This is just a Quote2",
+                        "source": "Martin"
+                    },
+                    {
+                        "quote": "This is just a Quote3 with a very long text that is longer than 40 characters",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote3",
+                        "source": "Dennis"
+                    },
+                    {
+                        "quote": "This is just a Quote4",
+                        "source": ""
+                    }
+                  ]
+                }
+            },
+            computed: {
+                // Обчислювана властивість для відсортованих цитат
+                sortedQuotes: function () {
+                    return this.quotes.slice().sort((a, b) => a.source.localeCompare(b.source));
+                }
+            },
+            methods: {
+                // Метод для сортування цитат за авторами
+                sortQuotesByAuthor: function () {
+                    this.quotes.sort((a, b) => a.source.localeCompare(b.source));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html> 
+<html lang="en"> 
+ 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> 
+    <title>Document</title> 
+    <style> 
+        .red { 
+            color: red; 
+        } 
+        .black{ 
+            color: black; 
+        } 
+        .green{ 
+            width: 100px; 
+            height: 100px; 
+            background-color: green; 
+        } 
+        .center { 
+            width: 28%; 
+            margin: 0 auto; 
+        } 
+        .center p{ 
+            font-size: 48px; 
+        } 
+        .center #source { 
+            font-size: 30px; 
+        } 
+    </style> 
+</head> 
+ 
+<body> 
+    <div class="center" id="app"> 
+        <div class="quote" v-for="qt in qoutes" v-if="qt.source">
+            <h3 v-bind:class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3> 
+            <h5>{{ qt.source }}</h5> 
+        </div> 
+    </div> 
+</body> 
+<script type="text/javascript"> 
+    var quotesArray = [ 
+        { 
+            "quote": "This is just a Quote1", 
+            "source": "Christopher" 
+        }, 
+        { 
+            "quote": "This is just a Quote3 with a very long text that is longer than 40 characters", 
+            "source": "Martin" 
+        }, 
+        { 
+            "quote": "This is just a Quote3", 
+            "source": "Dennis" 
+        }, 
+        { 
+            "quote": "This is just a Quote4", 
+            "source": "" 
+        } 
+    ] 
+ 
+    new Vue({ 
+        el: '#app', 
+        data: { 
+            qoutes: quotesArray, 
+        }, 
+    }) 
+</script> 
+ 
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>Цитати</title>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .black {
+            color: black;
+        }
+
+        .green {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+        }
+
+        .center {
+            width: 28%;
+            margin: 0 auto;
+        }
+
+        .center p {
+            font-size: 48px;
+        }
+
+        .center #source {
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center" id="app">
+        <input type="radio" id="withAuthor" name="authorFilter" value="withAuthor" v-model="authorFilter"> 
+        <label for="withAuthor">Є автор</label>
+        <input type="radio" id="withoutAuthor" name="authorFilter" value="withoutAuthor" v-model="authorFilter"> 
+        <label for="withoutAuthor">Автора немає</label>
+        <button @click="sortQuotes">Сортувати за прізвищем</button>
+        <div class="quote" v-for="qt in filteredQuotes">
+            <h3 v-bind:class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3>
+            <h5>{{ qt.source }}</h5>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var quotesArray = [
+        {
+            "quote": "This is just a Quote1",
+            "source": "Christopher"
+        },
+        {
+            "quote": "This is just a Quote3 with a very long text that is longer than 40 characters",
+            "source": "Martin"
+        },
+        {
+            "quote": "This is just a Quote3",
+            "source": "Dennis"
+        },
+        {
+            "quote": "This is just a Quote4",
+            "source": ""
+        },
+        {
+            "quote": "This is just a Quote5",
+            "source": "Abram"
+        },
+        {
+            "quote": "This is just a Quote6",
+            "source": "Franklin"
+        }
+    ]
+
+    new Vue({
+        el: '#app',
+        data: {
+            quotes: quotesArray,
+            authorFilter: "withAuthor"
+        },
+        computed: {
+    filteredQuotes: function() {
+        if (this.authorFilter === "withAuthor") {
+            return this.quotes.filter(function(quote) {
+                return quote.source !== "";
+            });
+        } else if (this.authorFilter === "withoutAuthor") {
+            return this.quotes.filter(function(quote) {
+                return quote.source === "";
+            });
+        } else {
+            return this.quotes;
+        }
+        
+    }
+},
+methods: {
+        sortQuotes: function() {
+            this.quotes.sort(function(a, b) {
+                if (a.source < b.source) return -1;
+                if (a.source > b.source) return 1;
+                return 0;
+            });
+        }
+    }
+    })
+</script>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>Цитати</title>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .black {
+            color: black;
+        }
+
+        .green {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+        }
+
+        .center {
+            width: 28%;
+            margin: 0 auto;
+        }
+
+        .center p {
+            font-size: 48px;
+        }
+
+        .center #source {
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="center" id="app">
+        <input type="radio" id="withAuthor" name="authorFilter" value="withAuthor" v-model="authorFilter"> 
+        <label for="withAuthor">Є автор</label>
+        <input type="radio" id="withoutAuthor" name="authorFilter" value="withoutAuthor" v-model="authorFilter"> 
+        <label for="withoutAuthor">Автора немає</label>
+        
+        <div class="quote" v-for="qt in filteredQuotes">
+            <h3 v-bind:class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3>
+            <h5>{{ qt.source }}</h5>
+        </div>
+        <button @click="sortQuotes">Сортувати за прізвищем</button> 
+        <hr/>
+        <div class="quote" v-for="qt in sortedQuotes">
+            <h3 v-bind:class="qt.quote.length > 40 ? 'red' : 'black'">{{ qt.quote }}</h3>
+            <h5>{{ qt.source }}</h5>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var quotesArray = [
+        {
+            "quote": "This is just a Quote1",
+            "source": "Christopher"
+        },
+        {
+            "quote": "This is just a Quote3 with a very long text that is longer than 40 characters",
+            "source": "Martin"
+        },
+        {
+            "quote": "This is just a Quote3",
+            "source": "Dennis"
+        },
+        {
+            "quote": "This is just a Quote4",
+            "source": ""
+        },
+        {
+            "quote": "This is just a Quote5",
+            "source": "Abram"
+        },
+        {
+            "quote": "This is just a Quote6",
+            "source": "Franklin"
+        }
+    ]
+
+    new Vue({
+        el: '#app',
+        data: {
+            quotes: quotesArray,
+            authorFilter: "withAuthor",
+            sortedQuotes: []  // Додана нова властивість для відсортованих цитат
+        },
+        computed: {
+            filteredQuotes: function() {
+                if (this.authorFilter === "withAuthor") {
+                    return this.quotes.filter(function(quote) {
+                        return quote.source !== "";
+                    });
+                } else if (this.authorFilter === "withoutAuthor") {
+                    return this.quotes.filter(function(quote) {
+                        return quote.source === "";
+                    });
+                } else {
+                    return this.quotes;
+                }
+            }
+        },
+        methods: {
+            sortQuotes: function() {
+                const quotesWithAuthor = this.quotes.filter(quote => quote.source !== "");
+                quotesWithAuthor.sort(function(a, b) {
+                    if (a.source < b.source) return -1;
+                    if (a.source > b.source) return 1;
+                    return 0;
+                });
+                this.sortedQuotes = quotesWithAuthor;
+            }
+        }
+    })
+</script>
+
+</html>
