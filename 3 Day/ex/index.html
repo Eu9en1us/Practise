@@ -2,22 +2,25 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Vue.js Examples</title>
+    <title>Vue.js Example</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 </head>
 <body>
 <div id="app">
     <div>
-        <span style="font-size: 25px;">Enter Age: </span>
-        <input v-model.number="age" type="number">
+        <label for="age" style="font-size: 25px;">Enter Age:</label>
+        <input id="age" v-model.number="age" type="number">
+        <p v-if="age !== ''">Age: {{ age }}</p>
     </div>
     <div>
-        <span style="font-size: 25px;">Enter Message: </span>
-        <input v-model.lazy="msg">
+        <label for="msg" style="font-size: 25px;">Enter Message:</label>
+        <input id="msg" v-model.lazy="msg">
+        <p v-if="msg !== ''">Message: {{ msg }}</p>
     </div>
     <div>
-        <span style="font-size: 25px;">Enter Message: </span>
-        <input v-model.trim="message">
+        <label for="message" style="font-size: 25px;">Enter Message:</label>
+        <input id="message" v-model.trim="message">
+        <p v-if="message !== ''">Trimmed Message: {{ message }}</p>
     </div>
 </div>
 
@@ -25,16 +28,16 @@
     <div v-bind:style="styleobj" v-on:mouseover="changebgcolor" v-on:mouseout="originalcolor"></div>
 </div>
 
+
 <script>
     new Vue({
         el: '#app',
         data: {
-            age: 0,
+            age: '',
             msg: '',
             message: ''
         }
     });
-
     new Vue({
         el: '#databinding',
         data: {
