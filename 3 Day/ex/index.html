@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js Examples</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <span style="font-size: 25px;">Enter Age: </span>
+        <input v-model.number="age" type="number">
+    </div>
+    <div>
+        <span style="font-size: 25px;">Enter Message: </span>
+        <input v-model.lazy="msg">
+    </div>
+    <div>
+        <span style="font-size: 25px;">Enter Message: </span>
+        <input v-model.trim="message">
+    </div>
+</div>
+
+<div id="databinding">
+    <div v-bind:style="styleobj" v-on:mouseover="changebgcolor" v-on:mouseout="originalcolor"></div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            age: 0,
+            msg: '',
+            message: ''
+        }
+    });
+
+    new Vue({
+        el: '#databinding',
+        data: {
+            styleobj: {
+                width: "100px",
+                height: "100px",
+                backgroundColor: "red"
+            }
+        },
+        methods: {
+            changebgcolor: function () {
+                this.styleobj.backgroundColor = "green";
+            },
+            originalcolor: function () {
+                this.styleobj.backgroundColor = "red";
+            }
+        }
+    });
+</script>
+</body>
+</html>

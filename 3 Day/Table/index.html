@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>Список студентів</title>
+    <style>
+        .highlighted {
+            background-color: rgb(230, 169, 169);
+        }
+        h1 {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* Стилі для темної теми */
+        body.dark-theme {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Зміна кольорів тексту та фону для таблиці у темній темі */
+        body.dark-theme table {
+            background-color: #444; /* Змініть колір фону таблиці */
+            color: white; /* Змініть колір тексту в таблиці */
+        }
+
+        body.dark-theme th {
+            background-color: #222; /* Змініть колір фону заголовків стовпців */
+            color: white; /* Змініть колір тексту заголовків стовпців */
+        }
+
+        body.dark-theme tr {
+            background-color: #333; /* Змініть колір фону рядків таблиці */
+        }
+
+        body.dark-theme a {
+            color: #e74c3c; /* Змініть колір посилань */
+        }
+
+        body.dark-theme a:hover {
+            text-decoration: underline;
+        }
+        /* Стилі для виділених рядків у темній темі */
+        body.dark-theme tr.highlighted {
+            background-color: #555; /* Змініть колір фону для виділених рядків */
+            color: white; /* Змініть колір тексту для виділених рядків */
+        }
+        /* Остальные стили остаются без изменений */
+        .theme-controls {
+            display: flex;
+            align-items: center;
+        }
+        .add-student-form {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Список студентів</h1>
+        <div class="theme-controls">
+            <p>Кількість студентів: {{ students.length }}</p>
+            <input type="radio" id="lightTheme" value="light" v-model="theme" style="
+                margin-left: 20px;
+            " />
+            <label for="lightTheme">Світла тема</label>
+            <input type="radio" id="darkTheme" value="dark" v-model="theme" style="
+                margin-left: 20px;
+            " />
+            <label for="darkTheme">Темна тема</label>
+        </div>
+        <input type="text" v-model="search" placeholder="Пошук за прізвищем">
+        
+        <!-- Кнопка для відображення форми додавання нового студента -->
+        <button @click="showAddForm">Додати</button>
+        
+        <!-- Форма для додавання нового студента -->
+        <div class="add-student-form" v-if="showingAddForm">
+            <h2>Додати нового студента</h2>
+            <input type="text" v-model="newStudentName" placeholder="ПІБ">
+            <input type="text" v-model="newStudentGroup" placeholder="Група">
+            <input type="number" v-model="newStudentBirthYear" placeholder="Рік народження">
+            <label for="newStudentPassed">Пройшов практику:</label>
+            <input type="checkbox" id="newStudentPassed" v-model="newStudentPassed">
+            <button @click="addStudent">Додати студента</button>
+            <button @click="cancelAdd">Скасувати</button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ПІБ</th>
+                    <th>Група</th>
+                    <th>Рік народження</th>
+                    <th>Практика</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="student in filteredStudents" :key="student.id" :class="{ 'highlighted': student.highlighted }">
+                    <td>
+                        <span v-if="!isEditing(student)">{{ student.name }}</span>
+                        <input type="text" v-else v-model="editedName" />
+                    </td>
+                    <td>
+                        <span v-if="!isEditing(student)">{{ student.group }}</span>
+                        <input type="text" v-else v-model="editedGroup" />
+                    </td>
+                    <td>
+                        <span v-if="!isEditing(student)">{{ student.birthYear }}</span>
+                        <input type="number" v-else v-model="editedBirthYear" />
+                    </td>
+                    <td>
+                        <span v-if="!isEditing(student)">
+                            <input type="checkbox" v-model="student.passed" />
+                        </span>
+                        <input type="checkbox" v-else v-model="editedPassed" />
+                    </td>
+                    <td>
+                        <a @click="removeStudent(student.id)">Видалити</a>
+                        <a v-if="!isEditing(student)" @click="editStudent(student)" style="color: #098505; ">Редагувати</a>
+                        <button v-if="isEditing(student)" @click="saveStudent(student)">Зберегти</button>
+                        <button v-if="isEditing(student)" @click="cancelEdit(student)">Скасувати</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                students: [
+                    { id: 1, name: 'Іванов Іван Іванович', group: 'Група 1', birthYear: 1998, passed: true, highlighted: false },
+                    { id: 2, name: 'Петров Петро Петрович', group: 'Група 2', birthYear: 1999, passed: false, highlighted: false },
+                    { id: 3, name: 'Сидоров Олег Васильович', group: 'Група 1', birthYear: 2000, passed: true, highlighted: false },
+                    { id: 4, name: 'Коваленко Марія Володимирівна', group: 'Група 3', birthYear: 2002, passed: false, highlighted: false },
+                    { id: 5, name: 'Гриценко Оксана Ігорівна', group: 'Група 1', birthYear: 2000, passed: true, highlighted: false },
+                    { id: 6, name: 'Лисенко Ігор Володимирович', group: 'Група 2', birthYear: 2001, passed: false, highlighted: false },
+                    { id: 7, name: 'Шевченко Марина Сергіївна', group: 'Група 3', birthYear: 1999, passed: true, highlighted: false },
+                    { id: 8, name: 'Морозов Валентин Олегович', group: 'Група 2', birthYear: 2002, passed: false, highlighted: false },
+
+                ],
+                search: '',
+                theme: 'light',
+                editingStudent: null,
+                editedName: "",
+                editedGroup: "",
+                editedBirthYear: "",
+                editedPassed: false,
+                showingAddForm: false,
+                newStudentName: "",
+                newStudentGroup: "",
+                newStudentBirthYear: "",
+                newStudentPassed: false,
+            },
+            computed: {
+                filteredStudents() {
+                    const searchTerm = this.search.toLowerCase();
+                    return this.students.map(student => {
+                        const highlighted = searchTerm && student.name.toLowerCase().includes(searchTerm);
+                        return { ...student, highlighted };
+                    });
+                }
+            },
+            methods: {
+                removeStudent(id) {
+                    const index = this.students.findIndex(student => student.id === id);
+                    if (index !== -1) {
+                        this.students.splice(index, 1);
+                    }
+                },
+                saveStudent(student) {
+                    student.name = this.editedName;
+                    student.group = this.editedGroup;
+                    student.birthYear = this.editedBirthYear;
+                    student.passed = this.editedPassed;
+                    this.cancelEdit();
+                },
+                cancelEdit() {
+                    this.editingStudent = null;
+                    this.editedName = "";
+                    this.editedGroup = "";
+                    this.editedBirthYear = "";
+                    this.editedPassed = false;
+                },
+                isEditing(student) {
+                    return this.editingStudent === student;
+                },
+                editStudent(student) {
+                    if (this.isEditing(student)) {
+                        this.saveStudent(student);
+                    }
+                    this.editingStudent = student;
+                    this.editedName = student.name;
+                    this.editedGroup = student.group;
+                    this.editedBirthYear = student.birthYear;
+                    this.editedPassed = student.passed;
+                },
+                showAddForm() {
+                    this.showingAddForm = true;
+                },
+                addStudent() {
+                    const newStudent = {
+                        id: this.students.length + 1,
+                        name: this.newStudentName,
+                        group: this.newStudentGroup,
+                        birthYear: parseInt(this.newStudentBirthYear),
+                        passed: this.newStudentPassed,
+                    };
+                    this.students.push(newStudent);
+                    this.newStudentName = "";
+                    this.newStudentGroup = "";
+                    this.newStudentBirthYear = "";
+                    this.newStudentPassed = false;
+                    this.showingAddForm = false;
+                },
+                cancelAdd() {
+                    this.newStudentName = "";
+                    this.newStudentGroup = "";
+                    this.newStudentBirthYear = "";
+                    this.newStudentPassed = false;
+                    this.showingAddForm = false;
+                },
+            },
+            watch: {
+                theme(newTheme) {
+                    if (newTheme === 'dark') {
+                        document.body.classList.add('dark-theme');
+                    } else {
+                        document.body.classList.remove('dark-theme');
+                    }
+                    localStorage.setItem('theme', newTheme);
+                }
+            },
+            created() {
+                this.theme = localStorage.getItem('theme') || 'light';
+            },
+        });
+    </script>
+</body>
+</html>
