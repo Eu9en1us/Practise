@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body onload="startTime()">
+
+    <div id="time"></div>
+
+    <form name="form1" method="get">
+        <div id="input">Введіть суму: <input type="text" name="inputbox" value="" onblur="convert(this.form)"> <br>
+        </div>
+        Виберіть валюти:<br>ІЗ
+        <select id="fromCurrency" size="4">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="UAH">UAH</option>
+        </select> В
+        <select id="toCurrency" size="4">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="UAH">UAH</option>
+        </select>
+    </form>
+
+    <div id="result">Результат:
+        <div id="convertedResult">  </div>
+    </div>
+
+</body>
+
+</html>
