@@ -141,7 +141,10 @@
                     </td>
                     <td>
                         <span v-if="!isEditing(student)">{{ student.group }}</span>
-                        <input v-if="editingStudent._id == student._id" type="text" v-model="editingStudent.group" />
+                        <select v-if="editingStudent._id == student._id" v-model="editingStudent.group">
+                            <option value="RPZ 20 1/9">RPZ 20 1/9</option>
+                            <option value="RPZ 20 2/9">RPZ 20 2/9</option>
+                          </select>
                     </td>
                     <td>
                         <span v-if="!isEditing(student)">{{ student.mark }}</span>
