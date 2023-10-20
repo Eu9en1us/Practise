@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Список студентів</title>
+        <style>
+            .highlighted {
+                background-color: rgb(230, 169, 169);
+            }
+            h1 {
+                background-color: #3498db;
+                color: white;
+                padding: 10px;
+            }
+            input[type="text"], input[type="number"] {
+                width: 100%;
+                padding: 5px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            a {
+                color: #e74c3c;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            
+            body.dark-theme {
+                background-color: #333;
+                color: white;
+            }
+    
+            
+            body.dark-theme table {
+                background-color: #444; 
+                color: white; 
+            }
+    
+            body.dark-theme th {
+                background-color: #222; 
+                color: white; 
+            }
+    
+            body.dark-theme tr {
+                background-color: #333; 
+            }
+    
+            body.dark-theme a {
+                color: #e74c3c; 
+            }
+    
+            body.dark-theme a:hover {
+                text-decoration: underline;
+            }
+            
+            body.dark-theme tr.highlighted {
+                background-color: #555; 
+                color: white; 
+            }
+            
+            .theme-controls {
+                display: flex;
+                align-items: center;
+            }
+            .add-student-form {
+                border: 1px solid #ccc;
+                padding: 10px;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+<body>
+    <div id="app">
+        <h1>Список студентів</h1>
+        <div class="theme-controls">
+            <p>Кількість студентів: {{ students.length }}</p>
+            <input type="radio" id="lightTheme" value="light" v-model="theme" style="margin-left: 20px;" />
+            <label for="lightTheme">Світла тема</label>
+            <input type="radio" id="darkTheme" value="dark" v-model="theme" style="margin-left: 20px;" />
+            <label for="darkTheme">Темна тема</label>
+        </div>
+        <input type="text" v-model="search" placeholder="Пошук за прізвищем">
+        
+        <!-- Кнопка для відображення форми додавання нового студента -->
+        <button @click="showAddForm">Додати</button>
+        
+        <!-- Форма для додавання нового студента -->
+        <div class="add-student-form" v-if="showingAddForm">
+            <h2>Додати нового студента</h2>
+            <input type="text" v-model="newStudentName" placeholder="ПІБ">
+            <input type="text" v-model="newStudentGroup" placeholder="Група">
+            <input type="number" v-model="newStudentMark" placeholder="Оцінка">
+            <label for="newStudentIsDonePr">Завершив практику:</label>
+            <input type="checkbox" id="newStudentIsDonePr" v-model="newStudentIsDonePr">
+            <input type="text" v-model="newStudentPhoto" placeholder="Посилання на фото">
+            <button @click="addStudent">Додати студента</button>
+            <button @click="cancelAdd">Скасувати</button>
+        </div>
+
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Фото</th>
+                    <th>ПІБ</th>
+                    <th>Група</th>
+                    <th>Оцінка</th>
+                    <th>Практика</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(student, index) in filteredStudents" :key="student._id" :class="{ 'highlighted': student.highlighted }">
+                    <td>
+                        <img :src="student.photo" alt="Фото студента" width="50" @click="editStudent(student)" />
+                        <input v-if="editingStudent._id == student._id" type="text" v-model="editingStudent.photo" />
+                    </td>
+                    <td>
+                        <input v-if="editingStudent._id == student._id" type="text" v-model="editingStudent.name" />
+                        <span v-else>{{ student.name }}</span>
+                    </td>
+                    <td>
+                        <span v-if="!isEditing(student)">{{ student.group }}</span>
+                        <input v-if="editingStudent._id == student._id" type="text" v-model="editingStudent.group" />
+                    </td>
+                    <td>
+                        <span v-if="!isEditing(student)">{{ student.mark }}</span>
+                        <input v-if="editingStudent._id == student._id" type="text" v-model="editingStudent.mark" />
+                    </td>
+                    <td>
+                        <span v-if="!isEditing(student)">
+                            <input type="checkbox" v-model="student.isDonePr" />
+                        </span>
+                        <input type="checkbox" v-else v-model="editedIsDonePr" />
+                    </td>
+                    <td>
+                        <a @click="removeStudent(student._id)">Видалити</a>
+                        <a v-if="!isEditing(student)" @click.prevent="editStudent(student, index)" href="#" style="color: #098505;">Редагувати</a>
+                        <button v-if="isEditing(student) && student === editingStudent" @click="saveStudent(student)">Зберегти</button>
+                        <button v-if="isEditing(student) && student === editingStudent" @click="cancelEdit(student)">Скасувати</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>  
+    <!--<script defer src="index.js"></script>-->
+    <script defer src="main.js"></script>
+</body>
+</html>
